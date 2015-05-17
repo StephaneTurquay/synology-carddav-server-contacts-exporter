@@ -7,7 +7,7 @@ $dump_file = 'caldav.sql';
 $export_path = 'export/';
 
 // Dump the table including all the contacts
-exec('pg_dump -O -U postgres caldav -t addressbook_object -a > ' . $dump_file);
+exec('pg_dump -O -U postgres caldav -t addressbook_object -a > ' . $dump_file . ' 2>error.log');
 
 // If path doesn't exist, create it
 if (!file_exists($export_path)) {
