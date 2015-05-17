@@ -25,22 +25,24 @@ if (!file_exists($export_path)) {
 	mkdir($export_path);
 }
 
-// Store table's datas into a string
-$caldav = file_get_contents($dump_file);
-
-// Extract information needed to create .vcf files
-preg_match_all('/BEGIN:VCARD(.+)END:VCARD/', $caldav, $vcard_data);
-preg_match_all('/[a-zA-Z0-9-]+\.vcf/', $caldav, $vcard_name);
-
-foreach ($vcard_name[0] as $key => $name) {
-
-	// Create all .vcf files and store it at the defined place
-	if(file_put_contents($export_path . $name, str_replace('\r\n', "\r\n" , $vcard_data[0][$key]))) {
-		echo $key+1 . ": " . $name . " has been exported !<br />";
+if(file_exists($dump_file)) {
+	// Store table's datas into a string
+	$caldav = file_get_contents($dump_file);
+	
+	// Extract information needed to create .vcf files
+	preg_match_all('/BEGIN:VCARD(.+)END:VCARD/', $caldav, $vcard_data);
+	preg_match_all('/[a-zA-Z0-9-]+\.vcf/', $caldav, $vcard_name);
+	
+	foreach ($vcard_name[0] as $key => $name) {
+	
+		// Create all .vcf files and store it at the defined place
+		if(file_put_contents($export_path . $name, str_replace('\r\n', "\r\n" , $vcard_data[0][$key]))) {
+			echo $key+1 . ": " . $name . " has been exported !<br />";
+		}
+		else {
+			echo "<strong>Error with ". $key+1 . ': ' . $name . "<br />";
+		}	
 	}
-	else {
-		echo "<strong>Error with ". $key+1 . ': ' . $name . "<br />";
-	}	
 }
 
 ?>
